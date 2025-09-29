@@ -6,7 +6,7 @@ from Src.Models.company_model import company_model
 import os
 import json
 
-####################################################
+####################################################3
 # Менеджер настроек. 
 # Предназначен для управления настройками и хранения параметров приложения
 class settings_manager:
@@ -80,12 +80,13 @@ class settings_manager:
 
     # Параметры настроек по умолчанию
     def set_default(self):
-        company = company_model()
+        self.__settings = settings_model()
+
+        company = company_model(settings=settings_model())
         company.name = "Рога и копыта"
         company.inn = -1
-        
-        self.__settings = settings_model()
         self.__settings.company = company
+
 
 
 

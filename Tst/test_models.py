@@ -1,3 +1,6 @@
+from Src.Models.nomenclature_group_model import nomenclature_group_model
+from Src.Models.nomenclature_model import nomenclature_model
+from Src.Models.unit_model import unit_model
 from Src.settings_manager import settings_manager
 from Src.Models.company_model import company_model
 import unittest
@@ -67,7 +70,7 @@ class test_models(unittest.TestCase):
         print(f"ИНН {manager1.settings.company.inn}")
 
     # Проверка на сравнение двух по значению одинаковых моделей
-    def text_equals_storage_model_create(self):
+    def test_text_equals_storage_model_create(self):
         # Подготовка
         id = uuid.uuid4().hex
         storage1 = storage_model()
@@ -79,8 +82,50 @@ class test_models(unittest.TestCase):
         # Проверки
         assert storage1 == storage2
 
+    # тестирование создания модели группы номенклатуры
+    def test_nomenclature_group_model_create(self):
+        # Подготовка
+        nomenclature_group = nomenclature_group_model(name="test")
+        nomenclature_group.description="test desc"
 
-    
-  
+        assert nomenclature_group.name == "test" and     nomenclature_group.description=="test desc"
+    # тестирование создания модели unit и использование
+    def test_unit_model(self):
+        # Подготовка
+        gr=unit_model("gr")
+        kg=unit_model("kg",1000,gr)
+
+        mass_g=150000
+        mass_kg=150
+        assert mass_kg*kg.ratio == mass_g
+
+    # тестирование создания модели номенклатуры с всеми подклассами
+    def test_nomenclature_model_create(self):
+        # Подготовка
+        nomenclature_group = nomenclature_group_model(name="test")
+
+        nomenclature_group.description = "test desc"
+
+        gr = unit_model("gr")
+        kg = unit_model("kg", 1000, gr)
+
+        nomenclature=nomenclature_model(name="test nomenclature")
+        nomenclature.group=nomenclature_group
+        nomenclature.unit=kg
+
+        nomenclature.full_name="t" * 254
+        nomenclature.description="test description"
+        nomenclature.article="cle"
+
+
+        assert nomenclature
+    # тестирование создания через фаил
+    def test_company_model_file_create(self):
+        manager = settings_manager()
+        manager.file_name="settings.json"
+        company = company_model(settings=manager.settings)
+
+        assert company.inn ==123456789
+
 if __name__ == '__main__':
     unittest.main()   
