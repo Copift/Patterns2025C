@@ -1,32 +1,44 @@
 from Src.Core.validator import validator
-from Src.Core.abstract_model import abstact_model
+from Src.Core.abstract_model import abstract_reference
+
+
 
 ###############################################
 # Модель организации
-class company_model(abstact_model):
-    __name:str = ""
+class company_model(abstract_reference):
+    """
+      Модель компании/организации.
+
+      Наследуется от abstract_reference и содержит реквизиты компании для финансовых операций.
+      Может инициализироваться данными из настроек приложения.
+
+      Attributes:
+          name (str): Название компании (наследуется от abstract_reference)
+          inn (int): ИНН (Идентификационный номер налогоплательщика) - 12 символов
+          bic (int): БИК (Банковский идентификационный код) - 9 символов
+          corr_account (int): Корреспондентский счет - 11 символов
+          account (int): Расчетный счет - 11 символов
+          ownership (str): Вид собственности - 5 символов
+      """
+
     __inn:int = 0
     __bic:int = 0
     __corr_account:int = 0
     __account:int = 0
     __ownership:str = ""
+    def __init__(self, settings):
 
-    # ИНН : 12 симв
-    # Счет 11 симв
-    # Корреспондентский счет 11 симв
-    # БИК 9 симв
-    # Наименование
-    # Вид собственности 5 симв
+        if settings.company is not None and validator.validate(settings.company, company_model):
+            # Копируем все поля из настроек
+            super().__init__(settings.company.name)
+            #self.__name = settings.company.name
+            self.__inn = settings.company.inn
+            self.__bic = settings.company.bic
+            self.__corr_account = settings.company.corr_account
+            self.__account = settings.company.account
+            self.__ownership = settings.company.ownership
 
-    # Наименование
-    @property
-    def name(self) -> str:
-        return self.__name
 
-    @name.setter
-    def name(self, value:str):
-        validator.validate(value, str)
-        self.__name = value.strip()
 
     # ИНН
     @property
@@ -76,7 +88,6 @@ class company_model(abstact_model):
         validator.validate(value, str, 5)
         self.__ownership = value.strip()
 
- 
 
        
 

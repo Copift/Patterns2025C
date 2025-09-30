@@ -2,28 +2,26 @@ from abc import ABC
 import uuid
 from Src.Core.validator import validator
 
-class abstact_model(ABC):
-    __unique_code:str
+class abstract_reference(ABC):
+    __name:str
 
-    def __init__(self) -> None:
+    def __init__(self,name:str) -> None:
         super().__init__()
-        self.__unique_code = uuid.uuid4().hex
+        self.name = name
+
+
 
     """
-    Уникальный код
+    Уникальный имя
     """
     @property
-    def unique_code(self) -> str:
-        return self.__unique_code
+    def name(self) -> str:
+        return self.__name
     
-    @unique_code.setter
-    def unique_code(self, value: str):
-        validator.validate(value, str)
-        self.__unique_code = value.strip()
+    @name.setter
+    def name(self, value: str):
+        validator.validate(value, str,50)
+        self.__name = value.strip()
     
 
-    """
-    Перегрузка штатного варианта сравнения
-    """
-    def __eq__(self, value: str) -> bool:
-        return self.__unique_code == value
+
